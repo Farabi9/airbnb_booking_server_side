@@ -93,8 +93,18 @@ app.post('/register', async (req,res) =>{
         else{
             res.json(null);
         }
-        
     })
+
+
+
+
+    // user logout 4---------------------------------------------------
+    // --------------------------------------
+
+    app.post('/logout', (req, res) =>{
+        res.cookie('token', '').json(true);
+    })
+
 
 app.listen(4000, () => {
     console.log('Server is running on port 4000');
