@@ -4,6 +4,8 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const User = require('./models/User')
 const jwt = require('jsonwebtoken');
+const multer = require('multer');
+const fs = require('fs')
 const cookieParser = require('cookie-parser')
 const imageDownloader = require('image-downloader')
 require('dotenv').config();
@@ -117,6 +119,23 @@ app.post('/register', async (req,res) =>{
         });
         res.json(newName, )
     })
+
+
+    const photosMiddleware = multer({dest:'uploads'})
+
+    app.post('/upload', photosMiddleware.array('photos', 100) ,(req,res) =>{
+        const uploadedFiles = [];
+        for(let i=0; i < req.files.length; i++){
+            const {path, originalname} = req.files[i]
+            const parts=originalname.split('.')
+            const ext = parts[parts.length - 1];
+            const newPath = path + '.' + ext;
+            fs.renameSync(path, newPath)
+            uploadedFiles.push(newPath)
+        }
+        res.json(uploadedFiles)
+    })
+
 
 app.listen(4000, () => {
     console.log('Server is running on port 4000');
